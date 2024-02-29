@@ -1,24 +1,21 @@
-from llama_index.core.settings import Settings
-from llama_index.core.agent import AgentRunner
-from llama_index.core.tools.query_engine import QueryEngineTool
-from app.engine.tools import ToolFactory
-from app.engine.index import get_index
+from app.engine.pipeline import PipelineFactory
 
 
-def get_chat_engine():
-    tools = []
+async def get_chat_engine() -> str:
+    """
+    Asynchronous function to get the chat engine. It does not take any parameters and returns a string.
+    """
+    p = PipelineFactory()
 
-    # Add query tool
-    index = get_index()
-    query_engine = index.as_query_engine(similarity_top_k=3)
-    query_engine_tool = QueryEngineTool.from_defaults(query_engine=query_engine)
-    tools.append(query_engine_tool)
+    # Initialize an empty list to store outputs
+    output_list = []
 
-    # Add additional tools
-    tools += ToolFactory.from_env()
-
-    return AgentRunner.from_llm(
-        llm=Settings.llm,
-        tools=tools,
-        verbose=True,
+    response = await p.arun(
+        input="What are some of the recent major events that have occurred?"
     )
+
+    # Iterate over the async generator and store the outputs
+    async for item in response:
+        output_list.append(item)
+
+    return output_list[-1].message.content
