@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta 
 from pydantic import BaseModel, Field
-from typing import Optional, List, Annotated
+from typing import Optional, List
 
 class DateRange(BaseModel):
     f"Object representing valid date range to filter database and search for financial market information. Today is {date.today()}"
@@ -14,5 +14,5 @@ class FinancialMarketData(BaseModel):
     Represents information related to stock market data.
     """
 
-    tickers = Annotated[List[Optional[str]], Field(description="List of Stock ticker symbols.")]
+    tickers: List[Optional[str]] = Field(..., description='List of Stock ticker symbols.')
     date_range: DateRange

@@ -1,17 +1,29 @@
 from dotenv import load_dotenv
+import logging
+import os
+
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+
+from app.settings import init_settings
+from app.api.routers.chat import chat_router
 
 load_dotenv()
 
-import logging
-import os
-import uvicorn
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app.api.routers.chat import chat_router
-from app.settings import init_settings
-
-
 app = FastAPI()
+
+
+@app.get("/", include_in_schema=False)
+def index():
+    """
+    This function represents the index endpoint of the application.
+    No parameters are passed to this function.
+    It returns a RedirectResponse to the "/docs" endpoint.
+    """
+    return RedirectResponse("/docs")
+
 
 init_settings()
 
@@ -28,6 +40,7 @@ if environment == "dev":
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
 
 app.include_router(chat_router, prefix="/api/chat")
 
