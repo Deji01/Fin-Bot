@@ -17,7 +17,7 @@ class PipelineFactory:
             "reranker": Settings.reranker,
             "summarizer": Settings.summarizer,
             "prompt_template": Settings.prompt_tmpl,
-            "llm_component": Settings.llm.as_query_component(streaming=True),
+            "llm_component": Settings.llm,
         }
 
         # Create the DAG query pipeline

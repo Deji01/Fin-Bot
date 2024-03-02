@@ -99,8 +99,11 @@ def get_nodes(query: str, output: Dict[str, Any]):
     Returns:
         List[Any]: The retrieved nodes based on the query.
     """
+    get_retriever = Retriever(output=output)
+    finance_retriever, stock_retriever = get_retriever()
+
     retriever = QueryFusionRetriever(
-        [Retriever(output=output)],
+        [finance_retriever, stock_retriever],
         similarity_top_k=5,
         verbose=True,
     )
